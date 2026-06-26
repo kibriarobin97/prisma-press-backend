@@ -12,6 +12,10 @@ const loginUser = async (payload: ILoginUser) => {
     where: { email },
   });
 
+  if (user.activeStatus === "SUSPENDED") {
+    throw new Error("Your account has been suspended. Please contact support.");
+  }
+
   const isPasswordMatched = await bcrypt.compare(password, user.password);
 
   if (!isPasswordMatched) {
@@ -39,7 +43,7 @@ const loginUser = async (payload: ILoginUser) => {
 
   return {
     accessToken,
-    refreshToken
+    refreshToken,
   };
 };
 

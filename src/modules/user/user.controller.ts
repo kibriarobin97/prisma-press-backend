@@ -1,5 +1,5 @@
 import httpStatus from "http-status";
-import { NextFunction, Request, RequestHandler, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { userService } from "./user.service";
 import { catchAsync } from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendResponse";
@@ -19,6 +19,37 @@ const registerUser = catchAsync(
   },
 );
 
+const getMyProfile = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const profile = await userService.getMyProfileFromDB(req.user!.id);
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "User profile fetched successfully",
+      data: { profile },
+    });
+  },
+);
+
+const updateMyProfile = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const userId = req.user?.id as string;
+    const payload = req.body;
+    const updatedProfile = await userService.updateMyProfileIntoDB(userId, payload);
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "User profile updated successfully",
+      data: {updatedProfile}
+    })
+
+  },
+);
+
 export const userController = {
   registerUser,
+  getMyProfile,
+  updateMyProfile,
 };
