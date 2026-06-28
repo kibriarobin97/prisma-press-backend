@@ -15,7 +15,21 @@ const createPostIntoDB = async (
   return result;
 };
 
-const getAllPostFromDB = () => {};
+const getAllPostFromDB = async () => {
+  const posts = await prisma.post.findMany({
+    include: {
+      author: {
+        select: {
+          name: true,
+          email: true,
+        },
+      },
+      comments: true,
+    },
+  });
+
+  return posts;
+};
 
 const getPostByIdFromDB = () => {};
 
