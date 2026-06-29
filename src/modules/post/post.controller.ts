@@ -72,13 +72,12 @@ const updatePost = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const authorId = req.user?.id;
     const isAdmin = req.user?.role === "ADMIN";
+    const payload = req.body;
 
     const postId = req.params.postId;
     if (!postId) {
       throw new Error("Post id required in params");
     }
-
-    const payload = req.body;
 
     const result = await postService.updatePostIntoDB(
       postId as string,

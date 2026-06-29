@@ -59,11 +59,53 @@ const getCommentByCommentId = catchAsync(
 );
 
 const updateComment = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {},
+  async (req: Request, res: Response, next: NextFunction) => {
+    const authorId = req.user?.id;
+    const payload = req.body;
+
+    const commentId = req.params.commentId;
+    if (!commentId) {
+      throw new Error("Comment id required in params");
+    }
+
+    const result = await commentService.updateCommentIntoDB(
+      commentId as string,
+      authorId as string,
+      payload,
+    );
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "Comment updated successfully",
+      data: result,
+    });
+  },
 );
 
 const deleteComment = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {},
+  async (req: Request, res: Response, next: NextFunction) => {
+    const authorId = req.user?.id;
+    const isAdmin = req.user?.role === "ADMIN";
+
+    const commentId = req.params.commentId;
+    if (!commentId) {
+      throw new Error("Comment id required in params");
+    }
+
+    await commentService.deleteCommentFromDB(
+      commentId as string,
+      authorId as string,
+      isAdmin,
+    );
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "Comment deleted successfully",
+      data: null,
+    });
+  },
 );
 
 const moderateComment = catchAsync(
