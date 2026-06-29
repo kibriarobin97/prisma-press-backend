@@ -1,4 +1,25 @@
-const createCommentIntoDB = () => {};
+import { prisma } from "../../lib/prisma";
+import { ICreateCommentPayload } from "./comment.interface";
+
+const createCommentIntoDB = async (
+  payload: ICreateCommentPayload,
+  authorId: string,
+) => {
+  const post = await prisma.post.findUniqueOrThrow({
+    where: {
+      id: payload.postId,
+    },
+  });
+
+  const result = await prisma.comment.create({
+    data: {
+      ...payload,
+      authorId,
+    },
+  });
+
+  return result;
+};
 
 const getCommentByAuthorIdFromDB = () => {};
 
