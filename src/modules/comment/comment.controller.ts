@@ -25,11 +25,37 @@ const createComment = catchAsync(
 );
 
 const getCommentByAuthorId = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {},
+  async (req: Request, res: Response, next: NextFunction) => {
+    const authorId = req.params.authorId;
+
+    const result = await commentService.getCommentByAuthorIdFromDB(
+      authorId as string,
+    );
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "Comments retrieved successfully",
+      data: result,
+    });
+  },
 );
 
 const getCommentByCommentId = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {},
+  async (req: Request, res: Response, next: NextFunction) => {
+    const commentId = req.params.commentId;
+
+    const result = await commentService.getCommentByCommentIdFromDB(
+      commentId as string,
+    );
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "Comment retrieved successfully",
+      data: result,
+    });
+  },
 );
 
 const updateComment = catchAsync(

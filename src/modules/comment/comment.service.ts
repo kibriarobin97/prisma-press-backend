@@ -21,9 +21,41 @@ const createCommentIntoDB = async (
   return result;
 };
 
-const getCommentByAuthorIdFromDB = () => {};
+const getCommentByAuthorIdFromDB = async (authorId: string) => {
+  const result = await prisma.comment.findMany({
+    where: {
+      authorId,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
 
-const getCommentByCommentIdFromDB = () => {};
+  return result;
+};
+
+const getCommentByCommentIdFromDB = async (commentId: string) => {
+  const result = await prisma.comment.findUniqueOrThrow({
+    where: {
+      id: commentId,
+    },
+    include: {
+      post: {
+        select: {
+          title: true,
+          status: true,
+        },
+      },
+      author: {
+        select: {
+          name: true,
+        },
+      },
+    },
+  });
+
+  return result;
+};
 
 const updateCommentIntoDB = () => {};
 
