@@ -19,7 +19,7 @@ const createCheckoutSession = async (userId: string) => {
       });
       StripeCustomerId = customer.id;
     }
-    console.log("Price ID:", config.STRIPE_PRODUCT_PRICE_ID);
+    
     const session = await stripe.checkout.sessions.create({
       line_items: [
         {
